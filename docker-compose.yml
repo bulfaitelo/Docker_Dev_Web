@@ -2,9 +2,10 @@ version: '3.7'
 #docker pull php:apache
 networks:
   localhost:
+    driver: 'bridge'
 
 services:
-  apache-php: 
+  apache_php: 
     build: docker/apache
     container_name: apache_php
     ports: 
@@ -20,6 +21,8 @@ services:
       - INSTALL_DIR=/var/www
     networks:
       - localhost
+    depends_on:
+      - mysql_db
 
   mysql_db:
     build: docker/mysql
@@ -52,6 +55,23 @@ services:
       - PMA_HOST=mysql_db
       - PMA_PORT=3306
       - PMA_ARBITRARY=0
+    networks:
+      - localhost
+    depends_on:
+      - mysql_db
+  
+  node:
+    build: docker/node
+    container_name: node
+    #restart: always
+    ports:
+      - "3000:3000"
+      - "35729:35729"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - TZ=America/Sao_Paulo
+    volumes:
+      - ./www:/var/www
     networks:
       - localhost
 
