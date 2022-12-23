@@ -10,6 +10,7 @@ services:
     container_name: apache_php
     ports: 
       - "80:80"
+      - "8000:8000"
     volumes:
       - ./conf/apache/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
       - ./www:/var/www:rw
@@ -63,6 +64,7 @@ services:
   node:
     build: docker/node
     container_name: node
+    command: npm start
     #restart: always
     ports:
       - "3000:3000"
