@@ -28,7 +28,13 @@ RUN apt-get update && \
     pkg-config \
     libssl-dev \
     #limpa apt
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instalando NODE.JS
+RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
+    apt-get install -y nodejs
+
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod rewrite && a2enmod proxy && a2dissite 000-default
 # Removendo a pasta html (eu prefiro trabalhar na pasta www)
@@ -43,7 +49,7 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 # Instalando o Composer 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-USER www-data
+# USER www-data
 
 WORKDIR /var/www
 
