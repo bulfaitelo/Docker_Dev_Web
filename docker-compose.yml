@@ -5,12 +5,13 @@ networks:
     driver: 'bridge'
 
 services:
-  apache_php: 
+  app: 
     build: docker/apache
-    container_name: apache_php
+    container_name: app
     ports: 
       - "80:80"
-      - "8000:8000"
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - ./conf/apache/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
       - ./www:/var/www:rw

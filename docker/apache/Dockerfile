@@ -1,4 +1,4 @@
-FROM php:apache
+FROM php:apache-buster
 
 #https://hub.docker.com/_/php
 
