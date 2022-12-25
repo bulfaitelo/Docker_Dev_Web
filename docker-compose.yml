@@ -11,6 +11,7 @@ services:
     ports: 
       - "80:80"
       - "9000:9000"
+      - "8000:8000"
       - "9001:9001"
     volumes:
       - ./conf/apache/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
