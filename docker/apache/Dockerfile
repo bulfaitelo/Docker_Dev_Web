@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM php:apache
 
 #https://hub.docker.com/_/php
 
@@ -6,58 +6,53 @@ FROM ubuntu:latest
 # RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Executar em Desevolvimento
-# RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
- RUN apt update && \
-    apt install -y \    
-    curl \
+ RUN apt-get update && \
+    apt-get install -y \        
     openssl \
     wget \
     #extensao necessária para o php
-    zlib1g-dev \
-    # #GD
-    # libfreetype6-dev \
-    # libjpeg62-turbo-dev \
-    # libpng-dev \    
+    #GD
+    zlib1g \
+    zlib1g-dev \    
+    libpng-dev \    
+    libwebp-dev \    
     #Intl
     libicu-dev \
     #Zip
     libzip-dev \
     unzip \
-    # openssl
+    #openssl
     libcurl4-openssl-dev \
     pkg-config \
-    libssl-dev \
-    php \
-    php-curl \
-    php-dom \
-    php-gd \
-    php-zip \
-    php-mbstring
+    libssl-dev
 
-# # Instalando NODE.JS
-# RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
-#     apt-get install -y nodejs
 
-# #limpa apt
-# RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# Instalando NODE.JS
+RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
+    apt-get install -y nodejs
 
-# # Habilietano Vhost
-# RUN a2enmod rewrite && a2enmod proxy && a2dissite 000-default
-# # Removendo a pasta html (eu prefiro trabalhar na pasta www)
-# RUN rm -rf /var/www/html
+#limpa apt
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# RUN docker-php-ext-install mysqli pdo_mysql bcmath exif gd intl zip sockets pcntl
-# RUN pecl install xdebug && docker-php-ext-enable xdebug
-#RUN pecl install imagick && docker-php-ext-enable imagick
-#RUN pecl install redis && docker-php-ext-enable redis
-#RUN pecl install mongodb && docker-php-ext-enable mongodb
+# Habilitando o Vhost
+RUN a2enmod rewrite && a2enmod proxy && a2dissite 000-default
+# Removendo a pasta html (eu prefiro trabalhar na pasta www)
+RUN rm -rf /var/www/html
+
+# RUN docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install mysqli pdo_mysql bcmath exif intl zip sockets pcntl
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+# RUN pecl install imagick && docker-php-ext-enable imagick
+# RUN pecl install redis && docker-php-ext-enable redis
+# RUN pecl install mongodb && docker-php-ext-enable mongodb
 
 # Instalando o Composer 
-# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 
-# WORKDIR /var/www
+WORKDIR /var/www
 
-# EXPOSE 9000
-
+EXPOSE 9000
