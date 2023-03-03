@@ -1,13 +1,14 @@
 version: '3.7'
-#docker pull php:apache
+
 networks:
   localhost:
     driver: 'bridge'
 
 services:
   app: 
-    build: docker/apache
+    build: docker/ubuntu
     container_name: app    
+    tty: true
     ports: 
       - "80:80"
       - "9000:9000"
@@ -17,7 +18,7 @@ services:
       - ./conf/apache/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
       - ./www:/var/www:rw
       - ./conf/apache/vhost/vhost.conf:/etc/apache2/sites-enabled/vhost.conf
-      # - ./logs:/tmp
+      # - ./logs:/tmp:rw
     environment:
       - TZ=America/Sao_Paulo
       - APACHE_LOG_DIR=/tmp
