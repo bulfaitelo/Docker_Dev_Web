@@ -110,7 +110,6 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 fi # Fim do if do dircolor
 
-
 # Habilitar a auto completar de textos com a tecla TAB
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
