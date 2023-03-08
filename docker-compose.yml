@@ -15,11 +15,12 @@ services:
       - "8000:8000"
       - "9001:9001"
     volumes:
-      - ./conf/apache/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
+      - ./conf/apache/php/php.ini:/etc/php/8.1/apache2/php.ini
       - ./www:/var/www:rw
       - ./conf/apache/vhost/vhost.conf:/etc/apache2/sites-enabled/vhost.conf
       - ./conf/ubuntu/.bashrc:/root/.bashrc
-      # - ./logs:/tmp:rw
+      - ./logs/apache:/var/log/apache2
+      # - ./logs/php:/tmp/php
     environment:
       - TZ=America/Sao_Paulo
       - APACHE_LOG_DIR=/tmp

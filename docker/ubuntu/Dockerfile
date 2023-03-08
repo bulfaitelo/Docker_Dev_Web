@@ -54,7 +54,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
 # RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-
 # Iniciando Apache
 CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
 # habilitando Vhost
