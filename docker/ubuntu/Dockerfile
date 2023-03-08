@@ -40,17 +40,10 @@ RUN apt update && \
     libcurl4-openssl-dev \
     pkg-config \
     libssl-dev \
-    php \
-    php-curl \
-    php-dom \
-    php-gd \
-    php-zip \
-    php-mbstring \
-    php-mysqli \
-    php-mysql \
-    php-bcmath \
-    php-intl   
-    
+    bash-completion \
+    vim \
+    # PHP Modules
+    php php-curl php-dom php-gd php-zip php-mbstring php-mysqli php-mysql php-bcmath php-intl
 
 
 # # Instalando NODE.JS
