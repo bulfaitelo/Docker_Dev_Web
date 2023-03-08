@@ -18,7 +18,7 @@ services:
       - ./conf/apache/php/php.ini:/etc/php/8.1/apache2/php.ini
       - ./www:/var/www:rw
       - ./conf/apache/vhost/vhost.conf:/etc/apache2/sites-enabled/vhost.conf
-      - ./conf/ubuntu/.bashrc:/root/.bashrc
+      - ./conf/ubuntu/bashrc.bash:/root/.bashrc
       - ./logs/apache:/var/log/apache2
       - ./logs/php:/tmp/php
     environment:
