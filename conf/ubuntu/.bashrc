@@ -6,10 +6,9 @@
 # * Editor: Luiz Peterli *
 # * Site: opentech.etc.br *
 # * Date: 28/09/2015 *
+# * URL: https://github.com/LuizPeterli/bash * 
 # *********************************************
 # ======================================================================
-
-
 
 #-----------------------------------------------
 # Configurações Gerais
@@ -120,7 +119,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
 
 #Data e Hora no comando Hystory
 export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
