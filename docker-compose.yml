@@ -18,6 +18,7 @@ services:
       - ./conf/apache/php/custom.php.ini:/usr/local/etc/php/conf.d/custom.php.ini
       - ./www:/var/www:rw
       - ./conf/apache/vhost/vhost.conf:/etc/apache2/sites-enabled/vhost.conf
+      - ./conf/ubuntu/.bashrc:/root/.bashrc
       # - ./logs:/tmp:rw
     environment:
       - TZ=America/Sao_Paulo
