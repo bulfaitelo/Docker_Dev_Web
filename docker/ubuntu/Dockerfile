@@ -60,6 +60,8 @@ CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
 RUN a2enmod rewrite && a2enmod proxy && a2dissite 000-default
 # Removendo a pasta html (eu prefiro trabalhar na pasta www)
 RUN rm -rf /var/www/html
+# Criando diretório de logs de erro do PHP
+RUN mkdir -m 755 /tmp/php 
 
 #RUN docker-php-ext-install mysqli pdo_mysql bcmath exif gd intl zip sockets pcntl
 #RUN pecl install xdebug && docker-php-ext-enable xdebug
