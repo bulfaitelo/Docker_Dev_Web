@@ -43,8 +43,6 @@ services:
       - ./conf/mysql/my.cnf:/etc/mysql/conf.d/config-file.cnf
     environment:      
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=bull
-      - MYSQL_PASSWORD=bull
       - TZ=America/Sao_Paulo
     networks:
       - localhost
