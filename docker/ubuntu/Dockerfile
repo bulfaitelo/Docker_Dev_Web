@@ -35,8 +35,9 @@ RUN apt update && \
     bash-completion \
     vim \
     # PHP & PHP Modules
-    php php-curl php-dom php-gd php-zip php-mbstring php-mysqli php-mysql php-bcmath php-intl
-
+    php php-curl php-dom php-gd php-zip php-mbstring php-mysqli php-mysql php-bcmath php-intl \
+    # Instalando driver mssqlserver
+    freetds-common freetds-bin unixodbc php-sybase
 
 # Instalando NODE.JS
 RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
