@@ -6,7 +6,9 @@ networks:
 
 services:
   app: 
-    build: docker/ubuntu
+    build: 
+      context: docker/ubuntu
+      dockerfile: Dockerfile.php.latest      
     container_name: app    
     tty: true
     ports: 

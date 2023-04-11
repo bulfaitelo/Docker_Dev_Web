@@ -70,6 +70,8 @@ Diretório responsável por salvar os arquivos do banco de dados, caso não quei
 ### docker:
 Responsável por conter os **Dockerfile** para levantar os containers, esse diretório é subdividido em 3 **mysql**, **phpmyadmin** e **ubuntu**, o mysql e phpmyadmin estão apenas as requisições de instalação, o ubuntu é onde são instalado o node, composer, php e etc.
 
+O diretório **docker/ubuntu** foi alterado para que possa existir diferentes versões do php apenas alterando o arquivo no `dockercomposer.yml`, por exemplo `Dockerfile.php.latest` irá trazer sempre a versão mais atualizada do ubuntu e php. 
+
 ### logs:
 subdividido em **apache** e **php** e sendo responsáveis respectivamente por salvar esses logs. 
 
