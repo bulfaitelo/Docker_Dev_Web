@@ -35,7 +35,7 @@ RUN apt update && \
     bash-completion \
     vim \
     # PHP & PHP Modules
-    php php-curl php-dom php-gd php-zip php-mbstring php-mysqli php-mysql php-bcmath php-intl \
+    php php-curl php-dom php-gd php-zip php-mbstring php-mysqli php-mysql php-bcmath php-intl php-sqlite3 \
     # Instalando driver mssqlserver
     freetds-common freetds-bin unixodbc php-sybase
 
