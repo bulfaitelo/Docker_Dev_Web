@@ -10,7 +10,7 @@ services:
       context: docker/ubuntu
       dockerfile: Dockerfile.php.latest      
     container_name: app    
-    tty: true
+    tty: true      
     ports: 
       - "80:80"
       - "9000:9000"
@@ -21,6 +21,7 @@ services:
       - ./www:/var/www:rw
       - ./conf/apache/vhost/vhost.conf:/etc/apache2/sites-enabled/vhost.conf
       - ./conf/ubuntu/bashrc.bash:/root/.bashrc
+      - ./conf/ubuntu/bashrc.bash:/home/app/.bashrc
       - ./logs/apache:/var/log/apache2
       - ./logs/php:/tmp/php
     environment:

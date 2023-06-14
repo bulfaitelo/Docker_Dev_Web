@@ -31,7 +31,10 @@ basta executar o comando para acessar o terminal do container:
     docker exec -it app bash
 
 ![Terminal do App](https://i.imgur.com/iGl1Out.png)
-### Banco de dados:
+
+*Para logar como Root a senha padrão é root, por exemplo `su - root` e a senha também é root, sendo possível alterar dentro `Dockerfile`*
+
+Para logar como Root a senha padrão é root, por exemplo su - root e a senha root### Banco de dados:
 O banco de dados replica nome do container que no meu caso é **mysql_db**,
 
 > Então quando for definir o nome do servidor mysql em alguma aplicação

@@ -1,5 +1,17 @@
 FROM ubuntu:latest
 
+
+# Criando usuário app. 
+ARG UID
+ARG GID
+ENV UID=${UID:-1000}
+ENV GID=${GID:-1000}
+RUN addgroup --gid ${GID} --system app
+RUN useradd -u ${UID} -g ${GID} -G 0 -s /bin/bash -m -d /home/app app
+
+# Definindo uma senha para o root que nesse caso também está como root. 
+RUN echo 'root:root'|chpasswd
+
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
@@ -48,7 +60,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
 
 
 # Iniciando Apache
-CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+RUN a2enmod lbmethod_byrequests
+# CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
 # habilitando Vhost
 RUN a2enmod rewrite && a2enmod proxy && a2dissite 000-default
 # Removendo a pasta html (eu prefiro trabalhar na pasta www)
@@ -56,9 +69,10 @@ RUN rm -rf /var/www/html
 # Criando diretório de logs de erro do PHP
 RUN mkdir -m 755 /tmp/php 
 
+
 # Instalando o Composer 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www
 
-EXPOSE 9000
+USER app
