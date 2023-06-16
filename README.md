@@ -1,6 +1,6 @@
 # Docker_Dev_Web
 
-Ambiente de desenvolvimento com PHP, Composer, Apache2, Mysql, phpMyadmin e Node, dentro do Ubuntu Server. 
+Ambiente de desenvolvimento com PHP, Composer, Apache2, Mysql, phpMyAdmin e Node, dentro do Ubuntu Server. 
 
 
 ## Instalação:
@@ -11,7 +11,7 @@ Para realizar a instalação basta realizar a clonagem do repositório.
 
 **GitHub Cli** 
 
-    git clon https://github.com/bulfaitelo/Docker_Dev_Web.git
+    git clone https://github.com/bulfaitelo/Docker_Dev_Web.git
 
 ## Levantando e derrubando os containers:
 
@@ -40,7 +40,7 @@ O banco de dados replica nome do container que no meu caso é **mysql_db**,
 > Então quando for definir o nome do servidor mysql em alguma aplicação
 > o nome do servidor vai ser **mysql_db**.
 
-### PhpMyadmin:
+### PhpMyAdmin:
 Basta acessar o caminho no navegador http://localhost:8080/, por padrão o usuário criado é o **root**, com a senha **root**. 
 
 > Lembrando que é um ambiente de desenvolvimento eu particularmente não
@@ -79,4 +79,4 @@ O diretório **docker/ubuntu** foi alterado para que possa existir diferentes ve
 subdividido em **apache** e **php** e sendo responsáveis respectivamente por salvar esses logs. 
 
 ## Conclusão:
-Esse ambiente foi inicialmente montado para quem esta migrando do Wamp para um ambiente Docker e quer ter a facilidade de rodar um comando e ter o ambiente pronto. conforme forem surgindo necessidades irei melhorando e corrigindo possíveis bugs.
+Esse ambiente foi inicialmente montado para quem esta migrando do Wamp para um ambiente Docker e quer ter a facilidade de rodar um comando e ter o ambiente pronto, conforme forem surgindo necessidades irei melhorando e corrigindo possíveis bugs.
