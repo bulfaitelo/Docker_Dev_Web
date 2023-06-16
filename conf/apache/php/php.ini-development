@@ -9,8 +9,8 @@
 ; PHP attempts to find and load this configuration from a number of locations.
 ; The following is a summary of its search order:
 ; 1. SAPI module specific location.
-; 2. The PHPRC environment variable. (As of PHP 5.2.0)
-; 3. A number of predefined registry keys on Windows (As of PHP 5.2.0)
+; 2. The PHPRC environment variable.
+; 3. A number of predefined registry keys on Windows
 ; 4. Current working directory (except CLI)
 ; 5. The web server's directory (for SAPI modules), or directory of PHP
 ; (otherwise in Windows)
@@ -83,7 +83,7 @@
 ; development version only in development environments, as errors shown to
 ; application users can inadvertently leak otherwise secure information.
 
-; This is the php.ini-production INI file.
+; This is the php.ini-development INI file.
 
 ;;;;;;;;;;;;;;;;;;;
 ; Quick Reference ;
@@ -320,7 +320,7 @@ serialize_precision = -1
 ; This directive allows you to disable certain functions.
 ; It receives a comma-delimited list of function names.
 ; https://php.net/disable-functions
-disable_functions = 
+disable_functions =
 
 ; This directive allows you to disable certain classes.
 ; It receives a comma-delimited list of class names.
@@ -376,7 +376,7 @@ zend.enable_gc = On
 ; Default Value: Off
 ; Development Value: Off
 ; Production Value: On
-zend.exception_ignore_args = On
+zend.exception_ignore_args = Off
 
 ; Allows setting the maximum string length in an argument of a stringified stack trace
 ; to a value between 0 and 1000000.
@@ -384,9 +384,7 @@ zend.exception_ignore_args = On
 ; Default Value: 15
 ; Development Value: 15
 ; Production Value: 0
-; In production, it is recommended to set this to 0 to reduce the output
-; of sensitive information in stack traces.
-zend.exception_string_param_max_len = 0
+zend.exception_string_param_max_len = 15
 
 ;;;;;;;;;;;;;;;;;
 ; Miscellaneous ;
@@ -397,7 +395,7 @@ zend.exception_string_param_max_len = 0
 ; threat in any way, but it makes it possible to determine whether you use PHP
 ; on your server or not.
 ; https://php.net/expose-php
-expose_php = Off
+expose_php = On
 
 ;;;;;;;;;;;;;;;;;;;
 ; Resource Limits ;
@@ -425,6 +423,11 @@ max_input_time = 60
 ; How many GET/POST/COOKIE input variables may be accepted
 ;max_input_vars = 1000
 
+; How many multipart body parts (combined input variable and file uploads) may
+; be accepted.
+; Default Value: -1 (Sum of max_input_vars and max_file_uploads)
+;max_multipart_body_parts = 1500
+
 ; Maximum amount of memory a script may consume
 ; https://php.net/memory-limit
 memory_limit = 128M
@@ -449,7 +452,7 @@ memory_limit = 128M
 ; development and early testing.
 ;
 ; Error Level Constants:
-; E_ALL             - All errors and warnings (includes E_STRICT as of PHP 5.4.0)
+; E_ALL             - All errors and warnings
 ; E_ERROR           - fatal run-time errors
 ; E_RECOVERABLE_ERROR  - almost fatal run-time errors
 ; E_WARNING         - run-time warnings (non-fatal errors)
@@ -509,7 +512,7 @@ display_errors = On
 ; Development Value: On
 ; Production Value: Off
 ; https://php.net/display-startup-errors
-display_startup_errors = Off
+display_startup_errors = On
 
 ; Besides displaying errors, PHP can also log errors to locations such as a
 ; server-specific log, STDERR, or a location specified by the error_log
@@ -587,7 +590,7 @@ report_memleaks = On
 ; empty.
 ; https://php.net/error-log
 ; Example:
-error_log = "/tmp/php/php_error.log"
+;error_log = php_errors.log
 ; Log errors to syslog (Event Log on Windows).
 ;error_log = syslog
 
@@ -695,7 +698,7 @@ auto_globals_jit = On
 ; Its value may be 0 to disable the limit. It is ignored if POST data reading
 ; is disabled through enable_post_data_reading.
 ; https://php.net/post-max-size
-post_max_size = 128M
+post_max_size = 8M
 
 ; Automatically add files before PHP document.
 ; https://php.net/auto-prepend-file
@@ -737,7 +740,7 @@ default_charset = "UTF-8"
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; UNIX: "/path1:/path2"
-;include_path = ".:/usr/share/php"
+;include_path = ".:/php/includes"
 ;
 ; Windows: "\path1;\path2"
 ;include_path = ".;c:\php\includes"
@@ -847,7 +850,7 @@ file_uploads = On
 
 ; Maximum allowed size for uploaded files.
 ; https://php.net/upload-max-filesize
-upload_max_filesize = 128M
+upload_max_filesize = 2M
 
 ; Maximum number of files that can be uploaded via a single request
 max_file_uploads = 20
@@ -910,11 +913,17 @@ default_socket_timeout = 60
 ;
 ; Notes for Windows environments :
 ;
-; - Many DLL files are located in the extensions/ (PHP 4) or ext/ (PHP 5+)
-;   extension folders as well as the separate PECL DLL download (PHP 5+).
+; - Many DLL files are located in the ext/
+;   extension folders as well as the separate PECL DLL download.
 ;   Be sure to appropriately set the extension_dir directive.
 ;
 ;extension=bz2
+
+; The ldap extension must be before curl if OpenSSL 1.0.2 and OpenLDAP is used
+; otherwise it results in segfault when unloading after using SASL.
+; See https://github.com/php/php-src/issues/8620 for more info.
+;extension=ldap
+
 ;extension=curl
 ;extension=ffi
 ;extension=ftp
@@ -924,7 +933,6 @@ default_socket_timeout = 60
 ;extension=gmp
 ;extension=intl
 ;extension=imap
-;extension=ldap
 ;extension=mbstring
 ;extension=exif      ; Must be after mbstring as it depends on it
 ;extension=mysqli
@@ -936,10 +944,12 @@ default_socket_timeout = 60
 ;extension=pdo_mysql
 ;extension=pdo_oci
 ;extension=pdo_odbc
-;extension=pdo_pgsql
+;extension=pdo_pgsqlx
 ;extension=pdo_sqlite
 ;extension=pgsql
 ;extension=shmop
+extension=pdo_sqlsrv
+extension=sqlsrv
 
 ; The MIBS data available in the PHP distribution must be installed.
 ; See https://www.php.net/manual/en/snmp.installation.php
@@ -951,6 +961,7 @@ default_socket_timeout = 60
 ;extension=sqlite3
 ;extension=tidy
 ;extension=xsl
+;extension=zip
 
 ;zend_extension=opcache
 
@@ -1091,6 +1102,10 @@ smtp_port = 25
 ; Add X-PHP-Originating-Script: that will include uid of the script followed by the filename
 mail.add_x_header = Off
 
+; Use mixed LF and CRLF line separators to keep compatibility with some
+; RFC 2822 non conformant MTA.
+mail.mixed_lf_and_crlf = Off
+
 ; The path to a log file that will log all mail() calls. Log entries include
 ; the full path of the script, line number, To address and headers.
 ;mail.log =
@@ -1203,7 +1218,7 @@ mysqlnd.collect_statistics = On
 
 ; Enable / Disable collection of memory usage statistics by mysqlnd which can be
 ; used to tune and monitor MySQL operations.
-mysqlnd.collect_memory_statistics = Off
+mysqlnd.collect_memory_statistics = On
 
 ; Records communication from all extensions using mysqlnd to the specified log
 ; file.
@@ -1256,7 +1271,7 @@ mysqlnd.collect_memory_statistics = Off
 ;oci8.ping_interval = 60
 
 ; Connection: Set this to a user chosen connection class to be used
-; for all pooled server requests with Oracle 11g Database Resident
+; for all pooled server requests with Oracle Database Resident
 ; Connection Pooling (DRCP).  To use DRCP, this value should be set to
 ; the same string for all web servers running the same application,
 ; the database pool must be configured, and the connection string must
@@ -1273,10 +1288,17 @@ mysqlnd.collect_memory_statistics = Off
 ; https://php.net/oci8.statement-cache-size
 ;oci8.statement_cache_size = 20
 
-; Tuning: Enables statement prefetching and sets the default number of
+; Tuning: Enables row prefetching and sets the default number of
 ; rows that will be fetched automatically after statement execution.
 ; https://php.net/oci8.default-prefetch
 ;oci8.default_prefetch = 100
+
+; Tuning: Sets the amount of LOB data that is internally returned from
+; Oracle Database when an Oracle LOB locator is initially retrieved as
+; part of a query. Setting this can improve performance by reducing
+; round-trips.
+; https://php.net/oci8.prefetch-lob-size
+; oci8.prefetch_lob_size = 0
 
 ; Compatibility. Using On means oci_close() will not close
 ; oci_connect() and oci_new_connect() connections.
@@ -1352,7 +1374,7 @@ session.save_handler = files
 ; where MODE is the octal representation of the mode. Note that this
 ; does not overwrite the process's umask.
 ; https://php.net/session.save-path
-;session.save_path = "/var/lib/php/sessions"
+;session.save_path = "/tmp"
 
 ; Whether to use strict session mode.
 ; Strict session mode does not accept an uninitialized session ID, and
@@ -1419,7 +1441,7 @@ session.serialize_handler = php
 ; Development Value: 1
 ; Production Value: 1
 ; https://php.net/session.gc-probability
-session.gc_probability = 0
+session.gc_probability = 1
 
 ; Defines the probability that the 'garbage collection' process is started on every
 ; session initialization. The probability is calculated by using gc_probability/gc_divisor,
@@ -1576,7 +1598,7 @@ session.sid_bits_per_character = 5
 ; Development Value: 1
 ; Production Value: -1
 ; https://php.net/zend.assertions
-zend.assertions = -1
+zend.assertions = 1
 
 ; Assert(expr); active by default.
 ; https://php.net/assert.active
@@ -1885,8 +1907,13 @@ ldap.max_links = -1
 ;opcache.file_cache_fallback=1
 
 ; Enables or disables copying of PHP code (text segment) into HUGE PAGES.
-; This should improve performance, but requires appropriate OS configuration.
-;opcache.huge_code_pages=1
+; Under certain circumstances (if only a single global PHP process is
+; started from which all others fork), this can increase performance
+; by a tiny amount because TLB misses are reduced.  On the other hand, this
+; delays PHP startup, increases memory usage and degrades performance
+; under memory pressure - use with care.
+; Requires appropriate OS configuration.
+;opcache.huge_code_pages=0
 
 ; Validate cached file permissions.
 ;opcache.validate_permission=0
