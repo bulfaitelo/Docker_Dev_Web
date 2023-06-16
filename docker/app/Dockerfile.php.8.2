@@ -1,0 +1,83 @@
+# FROM php:8.2.7-apache@sha256:a55f0cfc97282f22ffe7b9840cf620a73cbc6e8a45a3f447b4f07eb0262eb884
+FROM php:8.2-apache
+
+
+# Criando usuário app.
+ARG UID
+ARG GID
+
+ENV UID=${UID:-1000}
+ENV GID=${GID:-1000}
+RUN addgroup --gid ${GID} --system app
+RUN useradd -u ${UID} -g ${GID} -G 0,33 -s /bin/bash -m -d /home/app app
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN true
+
+USER root
+
+# Use the default production configuration
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+## Definindo tzdata pra poder definir o timezone pra não precisar de interação com o php.
+RUN truncate -s0 /tmp/preseed.cfg; \
+    echo "tzdata tzdata/Areas select America" >> /tmp/preseed.cfg; \
+    echo "tzdata tzdata/Zones/America select Sao_Paulo" >> /tmp/preseed.cfg; \
+    debconf-set-selections /tmp/preseed.cfg && \
+    rm -f /etc/timezone /etc/localtime && \
+    apt-get update && \
+    apt-get install -y tzdata
+
+RUN apt-get update && \
+    apt-get install -y libpng-dev \
+    libwebp-dev \
+    libjpeg62-turbo-dev \
+    libxpm-dev \
+    libfreetype6-dev \
+    libbz2-dev \
+    libonig-dev \
+    libgd3 \
+    libgd-dev \
+    libxml2-dev \
+    libzip-dev \
+    libicu-dev \
+    libpq-dev \
+    wget vim unixodbc-dev gnupg && \
+    # freetds-common freetds-bin unixodbc && \    
+    apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg && \
+    docker-php-ext-install mysqli pdo pdo_mysql gd bz2 zip mbstring exif intl bcmath pcntl && \
+    docker-php-ext-install -j$(nproc) opcache && \
+    docker-php-ext-enable mysqli pdo pdo_mysql && \
+    docker-php-ext-enable sodium 
+
+
+# Instalando Drive e configurando Conexão com SQL SERVER.
+RUN pecl install sqlsrv
+RUN pecl install pdo_sqlsrv
+
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
+# optional: for bcp and sqlcmd
+RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
+
+
+# Iniciando Apache
+RUN a2enmod lbmethod_byrequests
+# CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+# habilitando Vhost
+RUN a2enmod rewrite && a2enmod proxy && a2dissite 000-default
+# Removendo a pasta html (eu prefiro trabalhar na pasta www)
+RUN rm -rf /var/www/html
+# Criando diretório de logs de erro do PHP
+RUN mkdir -m 755 /tmp/php
+# Instalando o Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+WORKDIR /var/www
+
+# CMD ["apache2ctl", "-D", "FOREGROUND"]
+USER app

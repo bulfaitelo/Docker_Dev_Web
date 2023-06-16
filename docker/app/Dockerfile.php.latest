@@ -1,15 +1,15 @@
 FROM ubuntu:latest
 
-
 # Criando usuário app. 
 ARG UID
 ARG GID
 ENV UID=${UID:-1000}
 ENV GID=${GID:-1000}
 RUN addgroup --gid ${GID} --system app
-RUN useradd -u ${UID} -g ${GID} -G 0 -s /bin/bash -m -d /home/app app
+RUN useradd -u ${UID} -g ${GID} -G 0,33 -s /bin/bash -m -d /home/app app
 
 # Definindo uma senha para o root que nesse caso também está como root. 
+# ARG root_pass=root
 RUN echo 'root:root'|chpasswd
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -46,14 +46,18 @@ RUN apt update && \
     libssl-dev \
     bash-completion \
     vim \
+    cron \
+    sudo \
     # PHP & PHP Modules
     php php-curl php-dom php-gd php-zip php-mbstring php-mysqli php-mysql php-bcmath php-intl php-sqlite3 \
     # Instalando driver mssqlserver
     freetds-common freetds-bin unixodbc php-sybase
 
 # Instalando NODE.JS
-RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
-    apt-get install -y nodejs
+# RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
+#     apt-get install -y nodejs
+
+
 
 # limpa apt
 # RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -70,9 +74,12 @@ RUN rm -rf /var/www/html
 RUN mkdir -m 755 /tmp/php 
 
 
+
 # Instalando o Composer 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www
 
-USER app
+
+CMD ["apache2ctl", "-D", "FOREGROUND"]
+
