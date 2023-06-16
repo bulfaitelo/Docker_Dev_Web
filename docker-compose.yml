@@ -7,8 +7,8 @@ networks:
 services:
   app: 
     build: 
-      context: docker/ubuntu
-      dockerfile: Dockerfile.php.latest      
+      context: docker/app
+      dockerfile: Dockerfile.php.8.2      
     container_name: app    
     tty: true      
     ports: 
@@ -17,7 +17,8 @@ services:
       - "8000:8000"
       - "9001:9001"
     volumes:
-      - ./conf/apache/php/php.ini:/etc/php/8.1/apache2/php.ini
+      - ./conf/apache/php/php.ini-development:/usr/local/etc/php/php.ini
+      - ./conf/apache/ssl/openssl.cnf:/etc/ssl/openssl.cnf
       - ./www:/var/www:rw
       - ./conf/apache/vhost/vhost.conf:/etc/apache2/sites-enabled/vhost.conf
       - ./conf/ubuntu/bashrc.bash:/root/.bashrc
@@ -30,8 +31,8 @@ services:
       - INSTALL_DIR=/var/www
     networks:
       - localhost
-    depends_on:
-      - mysql_db
+    # depends_on:
+    #   - mysql_db
 
   mysql_db:
     build: docker/mysql
