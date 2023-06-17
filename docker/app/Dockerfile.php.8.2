@@ -42,7 +42,7 @@ RUN apt-get update && \
     libzip-dev \
     libicu-dev \
     libpq-dev \
-    wget vim unixodbc-dev gnupg && \
+    wget vim unixodbc-dev gnupg unzip && \
     # freetds-common freetds-bin unixodbc && \    
     apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg && \
