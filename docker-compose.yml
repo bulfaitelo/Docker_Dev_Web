@@ -63,6 +63,7 @@ services:
       - PMA_HOST=mysql_db
       - PMA_PORT=3306
       - PMA_ARBITRARY=0
+      - UPLOAD_LIMIT=128M
     networks:
       - localhost
     depends_on:
