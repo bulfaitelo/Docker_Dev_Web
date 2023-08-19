@@ -51,6 +51,10 @@ RUN apt-get update && \
     docker-php-ext-enable mysqli pdo pdo_mysql && \
     docker-php-ext-enable sodium 
 
+# Instalando NODE.JS
+RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
+    apt-get install -y nodejs
+
 
 # Instalando Drive e configurando Conexão com SQL SERVER.
 RUN pecl install sqlsrv
@@ -78,6 +82,8 @@ RUN mkdir -m 755 /tmp/php
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www
+
+EXPOSE 8000
 
 # CMD ["apache2ctl", "-D", "FOREGROUND"]
 USER app
