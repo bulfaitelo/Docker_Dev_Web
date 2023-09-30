@@ -26,7 +26,7 @@ RUN truncate -s0 /tmp/preseed.cfg; \
     debconf-set-selections /tmp/preseed.cfg && \
     rm -f /etc/timezone /etc/localtime && \
     apt-get update && \
-    apt-get install -y tzdata
+    apt-get install -y tzdata cron
 
 RUN apt-get update && \
     apt-get install -y libpng-dev \
@@ -51,22 +51,27 @@ RUN apt-get update && \
     docker-php-ext-enable mysqli pdo pdo_mysql && \
     docker-php-ext-enable sodium 
 
-# Instalando NODE.JS
-RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
-    apt-get install -y nodejs
+#Configurando cron
+RUN crontab /etc/cron.d/cron
+# Run the command on container startup
+# CMD cron && tail -f /var/log/cron.log
+
+# # Instalando NODE.JS
+# RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&\
+#     apt-get install -y nodejs
 
 
-# Instalando Drive e configurando Conexão com SQL SERVER.
-RUN pecl install sqlsrv
-RUN pecl install pdo_sqlsrv
+# # Instalando Drive e configurando Conexão com SQL SERVER.
+# RUN pecl install sqlsrv
+# RUN pecl install pdo_sqlsrv
 
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
+# RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+# RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
-RUN apt-get update
-RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
-# optional: for bcp and sqlcmd
-RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
+# RUN apt-get update
+# RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
+# # optional: for bcp and sqlcmd
+# RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
 
 
 # Iniciando Apache
@@ -86,4 +91,4 @@ WORKDIR /var/www
 EXPOSE 8000
 
 # CMD ["apache2ctl", "-D", "FOREGROUND"]
-USER app
+USER app 
