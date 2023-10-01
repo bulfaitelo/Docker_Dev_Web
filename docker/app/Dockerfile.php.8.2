@@ -52,13 +52,19 @@ RUN apt-get update && \
     docker-php-ext-enable sodium 
 
 #Configurando cron
-RUN crontab /etc/cron.d/cron
+# Copie o arquivo cron para a pasta /etc/cron.d/
+
+# copy crontabs for root user
+# ADD conf/crontab/cron /etc/cron.d/
+# RUN crontab /etc/cron.d/cron
 # Run the command on container startup
 # CMD cron && tail -f /var/log/cron.log
 
 # # Instalando NODE.JS
-# RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&\
-#     apt-get install -y nodejs
+RUN apt-get update &&  apt-get install -y ca-certificates curl gnupg
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update &&  apt-get install nodejs -y
 
 
 # # Instalando Drive e configurando Conexão com SQL SERVER.
