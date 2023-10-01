@@ -23,7 +23,8 @@ services:
       - ./conf/apache/vhost/vhost.conf:/etc/apache2/sites-enabled/vhost.conf
       - ./conf/ubuntu/bashrc.bash:/root/.bashrc
       - ./conf/ubuntu/bashrc.bash:/home/app/.bashrc
-      # - ./conf/cron/cron:/etc/cron.d/cron
+      - ./conf/crontab/:/etc/cron.d/
+      - ./conf/supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf:rw
       - ./logs/apache:/var/log/apache2
       - ./logs/php:/tmp/php
       - ./logs/cron:/var/log/cron
