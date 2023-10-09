@@ -28,9 +28,9 @@ basta executar o comando para acessar o terminal do container:
 
 ### App:
 
-    docker exec -it app bash
+    docker exec -it --user app app bash
 
-![Terminal do App](https://i.imgur.com/iGl1Out.png)
+![Terminal do App](https://i.imgur.com/yxugrTC.png)
 
 *Para logar como Root a senha padrão é root, por exemplo `su - root` e a senha também é root, sendo possível alterar dentro `Dockerfile`*
 
@@ -61,8 +61,13 @@ Contem 3 subdiretórios **apache**, **mysql** e **ubuntu** respectivamente respo
 #### apache:
 Contendo 2 subdiretórios **php**, contendo o **php.ini** e suas configurações personalizadas e o diretório **vhost** contendo o arquivo **vhost.conf**, nele é possível cadastrar os virtual hosts do Apache. 
 
+#### crontab:  
+Contendo o arquivo **cron**,  aqui que configuramos o `crontrab` do container app, já está com uma linha de exemplo bastando adequar a cada caso. 
 #### mysql:
-Contendo **my.cnf** com uma configuração bem básica, passível de personalização; 
+Contendo **my.cnf** com uma configuração bem básica, passível de personalização.
+
+#### supervisor:
+Contendo o **supervisord.conf**, onde configuramos os parâmetros do `supervisord`, como a inicialização o cron e definindo o usuário app para levantar o apache.
 
 #### ubuntu:
 Contem o arquivo de **.bashrc** com as personalizações de terminal e auto complete. 

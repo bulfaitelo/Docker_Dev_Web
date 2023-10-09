@@ -22,7 +22,7 @@ RUN truncate -s0 /tmp/preseed.cfg; \
     debconf-set-selections /tmp/preseed.cfg && \
     rm -f /etc/timezone /etc/localtime && \
     apt-get update && \
-    apt-get install -y tzdata cron
+    apt-get install -y tzdata cron supervisor
 
 RUN apt update && \
     apt install -y \    
@@ -53,10 +53,25 @@ RUN apt update && \
     # Instalando driver mssqlserver
     freetds-common freetds-bin unixodbc php-sybase
 
-# Instalando NODE.JS
-# RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&\
-#     apt-get install -y nodejs
+#Configurando cron
+# Copie o arquivo cron para a pasta /etc/cron.d/
 
+# Compoando crontab e definindo ele como padrão.
+COPY conf/crontab/cron /etc/cron.d/
+RUN crontab /etc/cron.d/cron
+
+# Copie o arquivo cron para a pasta /etc/cron.d/
+COPY conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Dê permissões adequadas ao arquivo cron
+RUN chmod 755 /etc/supervisor/conf.d/supervisord.conf
+
+
+# # Instalando NODE.JS
+# RUN apt-get update &&  apt-get install -y ca-certificates curl gnupg
+# RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+# RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+# RUN apt-get update &&  apt-get install nodejs -y
 
 
 # limpa apt
@@ -81,5 +96,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www
 
 
-CMD ["apache2ctl", "-D", "FOREGROUND"]
+
+# CMD ["apache2ctl", "-D", "FOREGROUND"]
+
+CMD ["/usr/bin/supervisord"]
+
+USER app
 

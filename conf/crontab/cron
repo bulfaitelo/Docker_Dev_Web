@@ -4,6 +4,6 @@
 #  / / / ,--- MONTH
 # / / / / ,-- DAY OF WEEK
 #/ / / / /
-* * * * *  echo "`date`: hello, world arquivo fora  " >> /var/log/cron/cron.log
+# * * * * *  cd /var/www/project_dir/ && php artisan schedule:run >> /dev/null 2>&1
 #
 #

@@ -54,35 +54,41 @@ RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/* && \
 #Configurando cron
 # Copie o arquivo cron para a pasta /etc/cron.d/
 
-# copy crontabs for root user
-# ADD conf/crontab/cron /etc/cron.d/
-# RUN crontab /etc/cron.d/cron
-# Run the command on container startup
-# CMD cron && tail -f /var/log/cron.log
+# Compoando crontab e definindo ele como padrão.
+COPY conf/crontab/cron /etc/cron.d/
+RUN crontab /etc/cron.d/cron
 
-# # Instalando NODE.JS
-# RUN apt-get update &&  apt-get install -y ca-certificates curl gnupg
-# RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-# RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-# RUN apt-get update &&  apt-get install nodejs -y
+# Copie o arquivo cron para a pasta /etc/cron.d/
+COPY conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Dê permissões adequadas ao arquivo cron
+RUN chmod 755 /etc/supervisor/conf.d/supervisord.conf
 
 
-# # Instalando Drive e configurando Conexão com SQL SERVER.
-# RUN pecl install sqlsrv
-# RUN pecl install pdo_sqlsrv
+# Instalando NODE.JS
+RUN apt-get update &&  apt-get install -y ca-certificates curl gnupg
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update &&  apt-get install nodejs -y
 
-# RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-# RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
-# RUN apt-get update
-# RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
-# # optional: for bcp and sqlcmd
-# RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
+# Instalando Drive e configurando Conexão com SQL SERVER.
+RUN pecl install sqlsrv
+RUN pecl install pdo_sqlsrv
 
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
+# optional: for bcp and sqlcmd
+RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
+
+# limpa apt
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Iniciando Apache
 RUN a2enmod lbmethod_byrequests
-# CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+
 # habilitando Vhost
 RUN a2enmod rewrite && a2enmod proxy && a2dissite 000-default
 # Removendo a pasta html (eu prefiro trabalhar na pasta www)
@@ -95,5 +101,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www
 
 EXPOSE 8000
-CMD ["/usr/bin/supervisord"]
+
+# USER app
+
+CMD ["/usr/bin/supervisord", "-n"]
+
 

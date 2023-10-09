@@ -5,11 +5,11 @@ networks:
     driver: 'bridge'
 
 services:
-  app: 
+  app:     
     build: 
-      context: docker/app
-      dockerfile: Dockerfile.php.8.2      
-    container_name: app    
+      context: ./
+      dockerfile: docker/app/Dockerfile.php.8.2      
+    container_name: app        
     tty: true      
     ports: 
       - "80:80"
@@ -22,9 +22,7 @@ services:
       - ./www:/var/www:rw
       - ./conf/apache/vhost/vhost.conf:/etc/apache2/sites-enabled/vhost.conf
       - ./conf/ubuntu/bashrc.bash:/root/.bashrc
-      - ./conf/ubuntu/bashrc.bash:/home/app/.bashrc
-      - ./conf/crontab/:/etc/cron.d/
-      - ./conf/supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf:rw
+      - ./conf/ubuntu/bashrc.bash:/home/app/.bashrc      
       - ./logs/apache:/var/log/apache2
       - ./logs/php:/tmp/php
       - ./logs/cron:/var/log/cron
