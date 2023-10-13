@@ -5,4 +5,6 @@
 # / / / / ,-- DAY OF WEEK
 #/ / / / /
 # * * * * *  echo "`date`: hello, world arquivo fora  " >> /var/log/cron/cron.log
-# * * * * *  usr/bin/local/bin/php /var/www/project_dir/artisan schedule:run >> /dev/null 2>&1
+# * * * * *  /usr/local/bin/php /var/www/project_dir/artisan schedule:run >> /dev/null 2>&1
+#
+#
