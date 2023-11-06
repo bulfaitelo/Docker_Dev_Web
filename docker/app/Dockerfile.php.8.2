@@ -26,7 +26,7 @@ RUN truncate -s0 /tmp/preseed.cfg; \
     debconf-set-selections /tmp/preseed.cfg && \
     rm -f /etc/timezone /etc/localtime
 RUN apt-get update && \
-    apt-get install -y tzdata cron supervisor
+    apt-get install -y tzdata cron supervisor default-mysql-client apt-utils
 
 RUN apt-get update && \
     apt-get install -y libpng-dev \
