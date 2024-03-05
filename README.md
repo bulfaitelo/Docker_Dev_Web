@@ -59,8 +59,10 @@ Diretório de trabalho, já vem 3 arquivos de testes:
 ### conf: 
 Contem 3 subdiretórios **apache**, **mysql** e **ubuntu** respectivamente responsáveis por suas funções: 
 #### apache:
-Contendo 2 subdiretórios **php**, contendo o **php.ini** e suas configurações personalizadas e o diretório **vhost** contendo o arquivo **vhost.conf**, nele é possível cadastrar os virtual hosts do Apache. 
-
+Contendo 3 subdiretórios:
+-  **php**: Contendo o **php.ini** e suas configurações personalizadas, pré configurados em `php.ini-development` e `php.ini-production`;
+- **ssl** : Arquivo de configuração do ssl;
+-  **vhost** contendo o arquivo **localhost.conf** direcionando para a pasta `/var/www` também podendo adicionar novos hosts.
 #### crontab:  
 Contendo o arquivo **cron**,  aqui que configuramos o `crontrab` do container app, já está com uma linha de exemplo bastando adequar a cada caso. 
 #### mysql:
