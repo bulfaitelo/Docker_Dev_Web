@@ -108,8 +108,12 @@ alias dir='dir --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+
 # alias para o php artsan
 alias a='php artisan '
+
+alias aServe='php artisan serve --host 0.0.0.0'
+
 fi # Fim do if do dircolor
 
 # Habilitar a auto completar de textos com a tecla TAB
