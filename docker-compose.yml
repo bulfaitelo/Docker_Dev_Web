@@ -23,6 +23,8 @@ services:
       - ./conf/apache/vhost:/etc/apache2/sites-enabled
       - ./conf/ubuntu/bashrc.bash:/root/.bashrc
       - ./conf/ubuntu/bashrc.bash:/home/app/.bashrc      
+      - ./conf/ubuntu/bash_history:/home/app/.bash_history:rw
+      - ./conf/ubuntu/bash_history:/root/.bash_history:rw
       - ./logs/apache:/var/log/apache2
       - ./logs/php:/tmp/php
       - ./logs/cron:/var/log/cron
