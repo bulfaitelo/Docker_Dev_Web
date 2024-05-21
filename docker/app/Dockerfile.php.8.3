@@ -1,0 +1,112 @@
+# FROM php:8.2.7-apache@sha256:a55f0cfc97282f22ffe7b9840cf620a73cbc6e8a45a3f447b4f07eb0262eb884
+FROM php:8.3-apache
+
+
+# Criando usuário app.
+ARG UID
+ARG GID
+
+ENV UID=${UID:-1000}
+ENV GID=${GID:-1000}
+RUN addgroup --gid ${GID} --system app
+RUN useradd -u ${UID} -g ${GID} -G 0,33 -s /bin/bash -m -d /home/app app
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN true
+
+USER root
+
+# Use the default production configuration
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+## Definindo tzdata pra poder definir o timezone pra não precisar de interação com o php.
+RUN truncate -s0 /tmp/preseed.cfg; \
+    echo "tzdata tzdata/Areas select America" >> /tmp/preseed.cfg; \
+    echo "tzdata tzdata/Zones/America select Sao_Paulo" >> /tmp/preseed.cfg; \
+    debconf-set-selections /tmp/preseed.cfg && \
+    rm -f /etc/timezone /etc/localtime
+RUN apt-get update && \
+    apt-get install -y tzdata cron supervisor default-mysql-client apt-utils
+
+RUN apt-get update && \
+    apt-get install -y libpng-dev \
+    libwebp-dev \
+    libjpeg62-turbo-dev \
+    libxpm-dev \
+    libfreetype6-dev \
+    libbz2-dev \
+    libonig-dev \
+    libgd3 \
+    libgd-dev \
+    libxml2-dev \
+    libzip-dev \
+    libicu-dev \
+    libpq-dev \
+    wget vim unixodbc-dev gnupg unzip
+    # freetds-common freetds-bin unixodbc && \    
+RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg && \
+    docker-php-ext-install mysqli pdo pdo_mysql gd bz2 zip mbstring exif intl bcmath pcntl && \
+    docker-php-ext-install -j$(nproc) opcache && \
+    docker-php-ext-enable mysqli pdo pdo_mysql && \
+    docker-php-ext-enable sodium 
+
+#Configurando cron
+# Copie o arquivo cron para a pasta /etc/cron.d/
+
+# Compoando crontab e definindo ele como padrão.
+COPY conf/crontab/cron /etc/cron.d/
+RUN crontab /etc/cron.d/cron
+
+# Copie o arquivo cron para a pasta /etc/cron.d/
+COPY conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Dê permissões adequadas ao arquivo cron
+RUN chmod 755 /etc/supervisor/conf.d/supervisord.conf
+
+
+# Instalando NODE.JS
+RUN apt-get update &&  apt-get install -y ca-certificates curl gnupg
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update &&  apt-get install nodejs -y
+
+
+# Instalando Drive e configurando Conexão com SQL SERVER.
+RUN pecl install sqlsrv
+RUN pecl install pdo_sqlsrv
+
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+RUN apt-get update
+
+RUN apt-get remove -y libodbc2 libodbcinst2 odbcinst unixodbc-common
+
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql18
+# optional: for bcp and sqlcmd
+RUN ACCEPT_EULA=Y apt-get install -y mssql-tools18
+
+# limpa apt
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Iniciando Apache
+RUN a2enmod lbmethod_byrequests
+
+# habilitando Vhost
+RUN a2enmod rewrite && a2enmod proxy && a2dissite 000-default
+# Removendo a pasta html (eu prefiro trabalhar na pasta www)
+RUN rm -rf /var/www/html
+# Criando diretório de logs de erro do PHP
+RUN mkdir -m 755 /tmp/php
+# Instalando o Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+WORKDIR /var/www
+
+EXPOSE 8000
+
+# USER app
+
+CMD ["/usr/bin/supervisord", "-n"]
+
+
