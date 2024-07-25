@@ -8,7 +8,7 @@ services:
   app:     
     build: 
       context: ./
-      dockerfile: docker/app/Dockerfile.php.8.3      
+      dockerfile: docker/app/Dockerfile.php.8.3
     container_name: app        
     tty: true      
     ports: 

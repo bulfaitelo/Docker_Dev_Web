@@ -54,9 +54,9 @@ RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/* && \
 #Configurando cron
 # Copie o arquivo cron para a pasta /etc/cron.d/
 
-# Compoando crontab e definindo ele como padrão.
-COPY conf/crontab/cron /etc/cron.d/
-RUN crontab /etc/cron.d/cron
+# Copiando crontab e definindo ele como padrão.
+COPY conf/crontab /etc/cron.d/
+RUN crontab /etc/cron.d/*
 
 # Copie o arquivo cron para a pasta /etc/cron.d/
 COPY conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
