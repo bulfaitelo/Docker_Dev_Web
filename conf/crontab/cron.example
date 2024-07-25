@@ -1,0 +1,9 @@
+#     ,------ MINUTE
+#    / ,----- HOUR
+#   / / ,---- DAY OF MONTH
+#  / / / ,--- MONTH
+# / / / / ,-- DAY OF WEEK
+#/ / / / /
+# * * * * *  echo "`date`: hello, world arquivo fora  " >> /var/log/cron/cron.log
+# * * * * *  /usr/local/bin/php /var/www/project_dir/artisan schedule:run >> /dev/null 2>&1
+#

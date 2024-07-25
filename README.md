@@ -126,7 +126,7 @@ Contendo 3 subdiretórios:
 
 #### crontab:
 
-Contendo o arquivo **cron**, aqui que configuramos o `crontrab` do container app, já está com uma linha de exemplo bastando adequar a cada caso.
+Contendo o arquivo **cron.example**, copie e renomeie ou crie um, todo o diretório é adicionado ao serviço do crontrab, pois aqui que configuramos o `crontrab` do container app, já está com uma linha de exemplo bastando adequar a cada caso.
 
 #### mysql:
 
