@@ -1,0 +1,4 @@
+*
+!cron.example
+!.gitignore
+!bashrc.bash
