@@ -64,7 +64,7 @@ basta executar o comando para acessar o terminal do container:
 Para facilitar alguns comandos repetitivos, foram criados alguns, caso queira adicionar algum basta configura-los dentro de `conf\ubuntu\bashrc.bash`, abaixo seguem os comandos criados:
 
 -	**a** - 'php artisan '
--	aServe - 'php artisam serve --host 0.0.0.0', nele já levanta um servidor php no localhost.
+-	aServe - 'php artisan serve --host 0.0.0.0', nele já levanta um servidor php no localhost.
 
 ### Banco de dados:
 
@@ -126,7 +126,7 @@ Contendo 3 subdiretórios:
 
 #### crontab:
 
-Contendo o arquivo **cron.example**, copie e renomeie ou crie um, todo o diretório é adicionado ao serviço do crontrab, pois aqui que configuramos o `crontrab` do container app, já está com uma linha de exemplo bastando adequar a cada caso.
+Contendo o arquivo **cron.example**, copie e renomeie ou crie um novo arquivo, todo o diretório é adicionado ao serviço do crontrab, pois aqui que configuramos o `crontrab` do container app, já está com uma linha de exemplo bastando adequar a cada caso.
 
 #### mysql:
 
@@ -159,6 +159,9 @@ Responsável por conter os **Dockerfile** para levantar os containers, esse dire
   
 
 O diretório **docker/ubuntu** foi alterado para que possa existir diferentes versões do php apenas alterando o arquivo no `dockercomposer.yml`, por exemplo `Dockerfile.php.latest` irá trazer sempre a versão mais atualizada do ubuntu e php.
+
+### example.env
+Afim de melhorar integração entre ambientes foi adicionado alguns parâmetros opcionais, caso queria configurar algum desses campos basta copiar para apenas `.env`, e definir os valores. 
 
   
 
