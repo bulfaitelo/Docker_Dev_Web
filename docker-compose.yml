@@ -8,10 +8,10 @@ services:
       context: ./
       dockerfile: docker/app/Dockerfile.php.8.3
       args:
-        - PLATFORM=${PLATFORM}
-        - NODE_JS=${NODE_JS}
-        - SQL_SERVER=${SQL_SERVER}
-        - LARAVEL_PDF=${LARAVEL_PDF}
+        - PLATFORM=${APP_PLATFORM}
+        - NODE_JS=${APP_NODE_JS}
+        - SQL_SERVER=${APP_SQL_SERVER}
+        - LARAVEL_PDF=${APP_LARAVEL_PDF}
     container_name: app        
     tty: true      
     ports: 
