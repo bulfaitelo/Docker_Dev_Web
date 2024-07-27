@@ -16,15 +16,15 @@ services:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - ./conf/apache/php/php.ini-development:/usr/local/etc/php/php.ini
-      - ./conf/apache/ssl/openssl.cnf:/etc/ssl/openssl.cnf
+      - ./conf/app/php/php.ini-development:/usr/local/etc/php/php.ini
+      - ./conf/app/ssl/openssl.cnf:/etc/ssl/openssl.cnf
       - ./www:/var/www:rw
-      - ./conf/apache/vhost:/etc/apache2/sites-enabled
+      - ./conf/app/vhost:/etc/apache2/sites-enabled
       - ./conf/ubuntu/bashrc.bash:/root/.bashrc
       - ./conf/ubuntu/bashrc.bash:/home/app/.bashrc      
       - ./conf/ubuntu/:/home/app/:rw
       - ./conf/ubuntu/:/root/:rw
-      - ./logs/apache:/var/log/apache2
+      # - ./logs/app:/var/log/apache2
       - ./logs/php:/tmp/php
       - ./logs/cron:/var/log/cron
     environment:
