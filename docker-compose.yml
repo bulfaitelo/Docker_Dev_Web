@@ -13,12 +13,15 @@ services:
         - SQL_SERVER=${APP_SQL_SERVER}
         - LARAVEL_PDF=${APP_LARAVEL_PDF}
     container_name: app        
-    tty: true      
+    tty: true
+    dns: 
+      - ${APP_DNS_1:-127.0.0.1}
+      - ${APP_DNS_2:-127.0.0.1}
     ports: 
       - "${APP_PORT_PUBLISHED_1:-80}:${APP_PORT_TARGET_1:-80}"      
-      - "${APP_PORT_PUBLISHED_1:-8000}:${APP_PORT_TARGET_1:-8000}"      
-      - "${APP_PORT_PUBLISHED_3:-9000}:${APP_PORT_TARGET_2:-9000}"      
-      - "${APP_PORT_PUBLISHED_4:-9001}:${APP_PORT_TARGET_3:-9001}"      
+      - "${APP_PORT_PUBLISHED_2:-8000}:${APP_PORT_TARGET_2:-8000}"      
+      - "${APP_PORT_PUBLISHED_3:-9000}:${APP_PORT_TARGET_3:-9000}"      
+      - "${APP_PORT_PUBLISHED_4:-9001}:${APP_PORT_TARGET_4:-9001}"      
     volumes:
       - ./conf/app/php/php.ini-development:/usr/local/etc/php/php.ini
       - ./conf/app/ssl/openssl.cnf:/etc/ssl/openssl.cnf
