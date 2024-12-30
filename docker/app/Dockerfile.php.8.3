@@ -4,10 +4,8 @@ FROM php:8.3-apache
 # Criando usuário app.
 ARG UID
 ARG GID
-ARG APP_PLATFORM
 ARG APP_NODE_JS
 ARG APP_SQL_SERVER
-ARG APP_LARAVEL_PDF
 ARG CACHE_BUST=1
 
 ENV UID=${UID:-1000}
@@ -15,7 +13,6 @@ ENV GID=${GID:-1000}
 ENV APP_PLATFORM=${APP_PLATFORM-x86}
 ENV APP_NODE_JS=${APP_NODE_JS-true}
 ENV APP_SQL_SERVER=${APP_SQL_SERVER-true}
-ENV APP_LARAVEL_PDF=${APP_LARAVEL_PDF-true}
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 ENV CACHE_BUST=$CACHE_BUST
@@ -51,6 +48,7 @@ RUN apt-get update && \
     libzip-dev \
     libicu-dev \
     libpq-dev \
+    libssl-dev \
     wget vim unixodbc-dev gnupg unzip
     # freetds-common freetds-bin unixodbc && \    
 RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/* && \
@@ -59,6 +57,9 @@ RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-install -j$(nproc) opcache && \
     docker-php-ext-enable mysqli pdo pdo_mysql && \
     docker-php-ext-enable sodium 
+
+RUN docker-php-ext-configure ftp --with-openssl-dir=/usr \
+	&& docker-php-ext-install ftp
 
 #Configurando cron
 COPY conf/crontab /etc/cron.d/

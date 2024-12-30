@@ -7,11 +7,9 @@ services:
     build: 
       context: ./
       dockerfile: docker/app/Dockerfile.php.8.3
-      args:
-        - PLATFORM=${APP_PLATFORM}
+      args:        
         - NODE_JS=${APP_NODE_JS}
-        - SQL_SERVER=${APP_SQL_SERVER}
-        - LARAVEL_PDF=${APP_LARAVEL_PDF}
+        - SQL_SERVER=${APP_SQL_SERVER}        
     container_name: app        
     tty: true
     dns: 
