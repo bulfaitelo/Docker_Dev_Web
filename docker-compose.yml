@@ -45,10 +45,9 @@ services:
     restart: always
 
   mysql_db:
-    build: docker/mysql
-    command: mysqld --default-authentication-plugin=mysql_native_password
+    build: docker/mysql    
     container_name: mysql_db
-    #restart: always
+    restart: always
     tty: true
     ports:
       - "3306:3306"
@@ -66,7 +65,7 @@ services:
     container_name: phpmyadmin
     links:
       - mysql_db
-    #restart: always
+    restart: always
     ports:
       - 8080:80
     environment:
@@ -78,5 +77,3 @@ services:
       - localhost
     depends_on:
       - mysql_db
-
-      
