@@ -16,10 +16,10 @@ services:
       - ${APP_DNS_1:-127.0.0.1}
       - ${APP_DNS_2:-127.0.0.1}
     ports: 
-      - "${APP_PORT_PUBLISHED_1:-80}:${APP_PORT_TARGET_1:-80}"      
-      - "${APP_PORT_PUBLISHED_2:-8000}:${APP_PORT_TARGET_2:-8000}"      
-      - "${APP_PORT_PUBLISHED_3:-9000}:${APP_PORT_TARGET_3:-9000}"      
-      - "${APP_PORT_PUBLISHED_4:-9001}:${APP_PORT_TARGET_4:-9001}"      
+      - "${APP_PORT_PUBLISHED_1:-80}:80"
+      - "${APP_PORT_PUBLISHED_2:-8000}:8000"      
+      - "${APP_PORT_PUBLISHED_3:-9000}:9000"      
+      - "${APP_PORT_PUBLISHED_4:-9001}:9001"      
     volumes:
       - ./conf/app/php/php.ini-development:/usr/local/etc/php/php.ini
       - ./conf/app/ssl/openssl.cnf:/etc/ssl/openssl.cnf
@@ -50,11 +50,12 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./dbdata/dbdata:/var/lib/mysql
+      - ./dbdata:/var/lib/mysql
       - ./conf/mysql/my.cnf:/etc/mysql/conf.d/config-file.cnf
     environment:      
       - MYSQL_ROOT_PASSWORD=root
       - TZ=America/Sao_Paulo
+    # command: ["mysqld", "--skip-grant-tables"]  
     networks:
       - localhost
 
@@ -65,7 +66,7 @@ services:
       - mysql_db
     restart: always
     ports:
-      - 8080:80
+      - "${PHPMYADMIN_PORT_PUBLISHED:-8080}:80"
     environment:
       - PMA_HOST=mysql_db
       - PMA_PORT=3306
