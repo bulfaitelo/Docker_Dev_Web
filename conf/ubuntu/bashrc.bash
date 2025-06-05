@@ -112,7 +112,11 @@ alias egrep='egrep --color=auto'
 # alias para o php artsan
 alias a='php artisan '
 
+# alias para o php artsan Server 
 alias aServe='php artisan serve --host 0.0.0.0'
+
+# alias para executar o Laravel Pint
+alias pint='./vendor/bin/pint'
 
 fi # Fim do if do dircolor
 
